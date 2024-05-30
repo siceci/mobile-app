@@ -1,4 +1,19 @@
-import { TouchableOpacity, Text, Touchable } from 'react-native'
+// import { TouchableOpacity, Text } from 'react-native'
+// import React from 'react'
+
+// const CustomButton = () => {
+//   return (
+//     // <View>
+//     //   <Text>CustomButton</Text>
+//     // </View>
+//     <TouchableOpacity className={`bg-white`}>
+//     <Text>CustomButton</Text>
+//     </TouchableOpacity>
+//   )
+// }
+
+// export default CustomButton
+import { TouchableOpacity, Text} from 'react-native'
 import React from 'react'
 
 const CustomButton = ({title, handlePress, 

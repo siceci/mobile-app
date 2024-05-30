@@ -1,51 +1,48 @@
 import { ScrollView, Text, View, Image } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Link, router } from 'expo-router'
+import { Link } from 'expo-router'
 import { images } from '../../constants'
-import FormField from '../components/FormField'
-import CustomButton from '../components/CustomButton'
-import Home from '../(tabs)/home'
+// import FormField from '../components/FormField'
+// import CustomButton from '../components/CustomButton'
 
-const SignIn = () => {
+const SignUp = () => {
   const [form, setForm] = useState({
+    username: '',
     email: '',
     password: ''
   })
 
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubmitting, setIsSubmittinng] = useState(false)
   // const submit = () => {}
+
   const submit = async () => {
-    setIsSubmitting(true);
+    setIsSubmittinng(true); // 开始提交，显示加载状态
     try {
-      const response = await fetch('http://localhost:3000/users/login', {
+      const response = await fetch('http://localhost:3000/users/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          username: form.username,
+          email: form.email,
+          password: form.password,
+        }),
       });
-  
-      const contentType = response.headers.get("content-type");
-      if (contentType && contentType.indexOf("application/json") !== -1) {
-        const jsonResponse = await response.json();
-        if (response.ok) {
-          console.log('登录成功:', jsonResponse);
-          router.push('/home');
-          // 适当的页面跳转
-        } else {
-          console.log('登录失败:', jsonResponse.message);
-        }
+      const jsonResponse = await response.json();
+      if (response.status === 200) {
+        console.log('注册成功:', jsonResponse);
+        // 可以在这里处理注册后的逻辑，如页面跳转等
       } else {
-        const textResponse = await response.text();
-        console.error('服务器响应不是JSON:', textResponse);
+        console.log('注册失败:', jsonResponse.message);
+        // 可以显示错误消息
       }
     } catch (error) {
       console.error('网络请求错误:', error);
     }
-    setIsSubmitting(false);
-  };
-  
+    setIsSubmittinng(false); // 结束提交，隐藏加载状态
+  }
   
 
   return (
@@ -57,8 +54,15 @@ const SignIn = () => {
         />
 
         <Text className="text-2xl text-black mt-10 font-bold">
-        Log in to App
+        Sign up to App
         </Text>
+
+        <FormField
+          title="UserName"
+          value={form.username}
+          handleChangeText={ (e) => setForm ({...form, username: e})}
+          otherStyles="mt-7"
+        />
 
         <FormField
           title="Email"
@@ -76,7 +80,7 @@ const SignIn = () => {
         />
 
         <CustomButton
-          title="Sign In"
+          title="Sign Up"
           handlePress={submit}
           containerStyles={"mt-7"}
           isLoading={isSubmitting}
@@ -84,10 +88,10 @@ const SignIn = () => {
 
         <View className="justify-center pt-3 flex-row gap-2">
           <Text className="text-lg text-gray-700">
-            Don't have account?
+            Have an account already?
           </Text>
-          <Link href="/sign-up" className='text-lg font-semibold text-orange-500'>
-          Sign Up</Link>
+          <Link href="/sign-in" className='text-lg font-semibold text-orange-500'>
+          Sign In</Link>
         </View>
 
         </View>
@@ -96,4 +100,4 @@ const SignIn = () => {
   )
 }
 
-export default SignIn
+export default SignUp

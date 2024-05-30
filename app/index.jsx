@@ -1,21 +1,15 @@
 
 import { ScrollView, StyleSheet, Text, View, Image} from 'react-native'
 import { StatusBar } from 'expo-status-bar'
-import { Link } from 'expo-router'
+import { Redirect, router } from 'expo-router'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-
 import { images } from '../constants'
 import CustomButton from './components/CustomButton'
 
+
 export default function App() {
   return (
-    // <View className="flex-1 items-center justify-center bg-white">
-    //   <Text className="text-3xl font-semibold">SplashScreen</Text>
-    //   <StatusBar style='auto'></StatusBar>
-    //   <Link href="/home" style={{color: 'blue'}}>Go to Home</Link>
-    // </View>
-
     //blackground color
     <SafeAreaView className="bg-black h-full"> 
     <ScrollView contentContainerStyle={{ height: '100%'}}>
@@ -40,9 +34,10 @@ export default function App() {
     Where creativity meets innvation: embark on a journey of limitless exploration with Aora
     </Text>
 
+
     <CustomButton
     title="Continue with Email"
-    handlePress={() => {}}
+    handlePress={() => router.push('/sign-in')}
     constainerStyles="w-full mt-7"
     ></CustomButton>
 
@@ -52,7 +47,9 @@ export default function App() {
     </View>
 
     </ScrollView>
-    <StatusBar backgroundColor='#161622'></StatusBar>
+    <StatusBar backgroundColor='#161622'
+        style='light'
+    />
     </SafeAreaView>
   )
 }
