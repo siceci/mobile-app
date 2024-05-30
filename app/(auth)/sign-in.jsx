@@ -5,7 +5,6 @@ import { Link, router } from 'expo-router'
 import { images } from '../../constants'
 import FormField from '../components/FormField'
 import CustomButton from '../components/CustomButton'
-import Home from '../(tabs)/home'
 
 const SignIn = () => {
   const [form, setForm] = useState({
@@ -49,22 +48,22 @@ const SignIn = () => {
   
 
   return (
-    <SafeAreaView className="bg-white h-full">
+    <SafeAreaView className="bg-teal-500 h-full">
       <ScrollView>
         <View className="w-full justify-center min-h-[85vh] px-4">
         <Image source={images.logo}
-          resizeMode='contain' className="w-[115px] h-[35px]"
+          resizeMode='contain' className="w-[380px] h-[100px]"
         />
 
-        <Text className="text-2xl text-black mt-10 font-bold">
-        Log in to App
+        <Text className="text-2xl text-white mt-5 font-bold">
+        Log in
         </Text>
 
         <FormField
           title="Email"
           value={form.email}
           handleChangeText={ (e) => setForm ({...form, email: e})}
-          otherStyles="mt-7"
+          otherStyles="mt-5"
           keyboardType="email-address"
         />
 
@@ -72,21 +71,21 @@ const SignIn = () => {
           title="Password"
           value={form.password}
           handleChangeText={ (e) => setForm ({...form, password: e})}
-          otherStyles="mt-7"
+          otherStyles="mt-5"
         />
 
         <CustomButton
           title="Sign In"
           handlePress={submit}
-          containerStyles={"mt-7"}
+          containerStyles={"mt-10 mb-1"}
           isLoading={isSubmitting}
         />
 
-        <View className="justify-center pt-3 flex-row gap-2">
-          <Text className="text-lg text-gray-700">
+        <View className="justify-center pt-3 flex-row gap-3">
+          <Text className="text-lg font-medium text-white">
             Don't have account?
           </Text>
-          <Link href="/sign-up" className='text-lg font-semibold text-orange-500'>
+          <Link href="/sign-up" className='text-lg font-extrabold text-orange-200'>
           Sign Up</Link>
         </View>
 

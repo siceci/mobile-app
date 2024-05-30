@@ -6,14 +6,14 @@ import React from 'react';
 //react funcitonal componement 
 const TabIcon = ({icon, color, name, focused}) => {
     return (
-        <View className="items-center justify-center gap-2">
+        <View className="items-center justify-center">
             <Image
                 source ={icon}
                 resizeMode="contain"
                 tintColor={color} 
-                className="w-6 h-6"
+                className="w-8 h-8"
             />
-            <Text className={`${focused ? 'font-psemibold' : 'font-pregular'} text-xs`}
+            <Text className={`${focused ? 'font-semibold' : 'font-pregular'} text-sm`}
             style={{color: color}}
             >
                 {name}
@@ -30,13 +30,13 @@ const TabsLayout = () => {
         screenOptions={{
             tabBarShowLabel:false,
             //the color icon that when u stay in the that tab
-            tabBarActiveTintColor : '#FFA001',
-            tabBarInactiveTintColor : '#CDCDE0', //inactive
+            tabBarActiveTintColor : '#fff7ed',
+            tabBarInactiveTintColor : '#1e3932', //inactive
             tabBarStyle: {
-                backgroundColor: '#161622', //black
-                borderTopWidth: 10,
-                borderTopColor: '#232553', //purple
-                height: 84,
+                backgroundColor: '#14b8a6', //Green
+                borderTopWidth: 1,
+                borderTopColor: '#1e3932', //Dark Green
+                height: 95,
             }
         }}>
 
@@ -44,13 +44,13 @@ const TabsLayout = () => {
         <Tabs.Screen 
         name="home"
         options={{
-            title: 'Home',
+            title: 'Today Task',
             headerShown: false,
             tabBarIcon: ({color, focused}) => (
                 <TabIcon
-                    icon={icons.home}
+                    icon={icons.list}
                     color={color}
-                    name="Home"
+                    name="Today Task"
                     focused={focused}
                 />
             )
@@ -61,13 +61,13 @@ const TabsLayout = () => {
         <Tabs.Screen 
         name="bookmark"
         options={{
-            title: 'BookMark',
+            title: 'Calendar',
             headerShown: false,
             tabBarIcon: ({color, focused}) => (
                 <TabIcon
-                    icon={icons.bookmark}
+                    icon={icons.calendar}
                     color={color}
-                    name="Bookmark"
+                    name="Calendar"
                     focused={focused}
                 />
             )
@@ -78,30 +78,30 @@ const TabsLayout = () => {
         <Tabs.Screen 
         name="create"
         options={{
-            title: 'Create',
+            title: 'About',
             headerShown: false,
             tabBarIcon: ({color, focused}) => (
                 <TabIcon
-                    icon={icons.plus}
+                    icon={icons.about}
                     color={color}
-                    name="Create"
+                    name="About"
                     focused={focused}
                 />
             )
         }}
         />
 
-        {/* Bookmark section */}
+        {/* Setting section */}
         <Tabs.Screen 
         name="profile"
         options={{
-            title: 'Profile',
+            title: 'Setting',
             headerShown: false,
             tabBarIcon: ({color, focused}) => (
                 <TabIcon
-                    icon={icons.profile}
+                    icon={icons.setting}
                     color={color}
-                    name="Profile"
+                    name="Setting"
                     focused={focused}
                 />
             )

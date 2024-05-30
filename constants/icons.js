@@ -1,5 +1,9 @@
 import bookmark from "../assets/icons/bookmark.png";
 import home from "../assets/icons/home.png";
+import list from "../assets/icons/list.png";
+import calendar from "../assets/icons/calendar.png";
+import about from "../assets/icons/about.png";
+import setting from "../assets/icons/setting.png";
 import plus from "../assets/icons/plus.png";
 import profile from "../assets/icons/profile.png";
 import leftArrow from "../assets/icons/left-arrow.png";
@@ -16,6 +20,10 @@ export default {
   play,
   bookmark,
   home,
+  list,
+  calendar,
+  about,
+  setting,
   plus,
   profile,
   leftArrow,

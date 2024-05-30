@@ -11,28 +11,29 @@ import CustomButton from './components/CustomButton'
 export default function App() {
   return (
     //blackground color
-    <SafeAreaView className="bg-black h-full"> 
+    <SafeAreaView style="#7BC9C8" className="bg-teal-500 h-full"> 
     <ScrollView contentContainerStyle={{ height: '100%'}}>
     <View className="w-full justify-center items-center h-full px-4">
 
     {/* Splash Logo */}
     <Image 
         source={images.logo}
-        // className="w-[130px] h-[84px]"
-        // resizeMode="contain"
+        className="w-[400px] h-[180px]"
+        resizeMode="contain"
     />
 
     {/* Text Title*/}
-    <View className="relative mt-5">
-    <Text className="text-3xl text-white font-bold text-center">
-    Discover Endeless Possibilities with {''}
-    <Text className="text-orange-500"> Aora</Text>
+    <View className="relative mt-1">
+    <Text className="text-3xl text-white font-bold text-center mb-10">
+    Streamline Your Life              {''}
+    <Text> with </Text>
+    <Text className="text-orange-200 font-extrabold"> MyTask</Text>
     </Text>
 
     {/* Subtitle */}
-    <Text className="text-white text-center mt-6 text-xl mb-6">
+    {/* <Text className="text-white text-center mt-6 text-xl mb-6">
     Where creativity meets innvation: embark on a journey of limitless exploration with Aora
-    </Text>
+    </Text> */}
 
 
     <CustomButton

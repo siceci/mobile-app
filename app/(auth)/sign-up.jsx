@@ -44,29 +44,29 @@ const SignUp = () => {
   };
 
   return (
-    <SafeAreaView className="bg-white h-full">
+    <SafeAreaView className="bg-teal-500 h-full">
       <ScrollView>
         <View className="w-full justify-center min-h-[85vh] px-4">
           <Image source={images.logo}
-            resizeMode='contain' className="w-[115px] h-[35px]"
+            resizeMode='contain' className="w-[380px] h-[100px]"
           />
 
-          <Text className="text-2xl text-black mt-10 font-bold">
-            Sign up to App
+          <Text className="text-2xl text-white mt-10 font-bold">
+            Sign up 
           </Text>
 
           <FormField
             title="UserName"
             value={form.username}
             handleChangeText={(text) => handleChangeText('username', text)}
-            otherStyles="mt-7"
+            otherStyles="mt-5"
           />
 
           <FormField
             title="Email"
             value={form.email}
             handleChangeText={(text) => handleChangeText('email', text)}
-            otherStyles="mt-7"
+            otherStyles="mt-5"
             keyboardType="email-address"
           />
 
@@ -74,21 +74,21 @@ const SignUp = () => {
             title="Password"
             value={form.password}
             handleChangeText={(text) => handleChangeText('password', text)}
-            otherStyles="mt-7"
+            otherStyles="mt-5"
           />
 
           <CustomButton
             title="Sign Up"
             handlePress={submit}
-            containerStyles={"mt-7"}
+            containerStyles={"mt-10 mb-1"}
             isLoading={isSubmitting}
           />
 
-          <View className="justify-center pt-3 flex-row gap-2">
-            <Text className="text-lg text-gray-700">
+          <View className="justify-center pt-3 flex-row gap-3">
+            <Text className="text-lg font-medium text-white">
               Have an account already?
             </Text>
-            <Link href="/sign-in" className='text-lg font-semibold text-orange-500'>
+            <Link href="/sign-in" className='text-lg font-extrabold text-orange-200'>
             Sign In</Link>
           </View>
 
