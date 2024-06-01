@@ -1,10 +1,14 @@
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
 import {Tabs, Redirect} from 'expo-router';
+import FontSizeContext from '../components/FontSizeContext';
 import {icons} from '../../constants';
-import React from 'react';
+import React, {useContext} from 'react';
 
 //react funcitonal componement 
 const TabIcon = ({icon, color, name, focused}) => {
+    const { fontSize, setFontSize } = useContext(FontSizeContext);
+    const parsedFontSize = parseFloat(fontSize); // 将 fontSize 转换为数字
+    const newFontSize = parsedFontSize - 3; 
     return (
         <View className="items-center justify-center">
             <Image
@@ -13,8 +17,8 @@ const TabIcon = ({icon, color, name, focused}) => {
                 tintColor={color} 
                 className="w-8 h-8"
             />
-            <Text className={`${focused ? 'font-semibold' : 'font-pregular'} text-sm`}
-            style={{color: color}}
+            <Text className={`${focused ? 'font-semibold' : 'font-pregular'}`}
+            style={{...styles.text, fontSize: `${newFontSize}rem`, color}}
             >
                 {name}
 
@@ -95,5 +99,8 @@ const TabsLayout = () => {
     </>
   )
 }
+const styles = StyleSheet.create({
+
+  });
 
 export default TabsLayout

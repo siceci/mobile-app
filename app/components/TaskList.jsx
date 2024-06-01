@@ -1,17 +1,23 @@
-import React, { useEffect } from 'react';
-import { View, Text, TouchableOpacity, FlatList, Alert } from 'react-native';
+import React, { useEffect, useContext } from 'react';
+import { View, Text, TouchableOpacity, FlatList, Alert, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import NetInfo from "@react-native-community/netinfo";
 import { getAuthToken } from '../(auth)/auth';
 import { deleteTaskOffline, syncTasksWithServer } from './taskStorage';
+import FontSizeContext from '../components/FontSizeContext';
 
-const TaskItem = ({ item, toggleTaskCompletion, setTaskToEdit, handleDeleteTask }) => (
+
+const TaskItem = ({ item, toggleTaskCompletion, setTaskToEdit, handleDeleteTask }) => {
+  const { fontSize } = useContext(FontSizeContext);
+
+  return (
+
   <View className={`flex-row p-3 items-center justify-between ml-4 mr-4 ${item.completed ? 'bg-green-100' : 'bg-red-100'}`}>
     <View className="flex-row items-center">
       <TouchableOpacity onPress={() => toggleTaskCompletion(item.id)}>
         <Icon name={item.completed ? 'check-square-o' : 'square-o'} size={25} color={item.completed ? 'gray' : 'green'} />
       </TouchableOpacity>
-      <Text className={`ml-2 text-base ${item.completed ? 'text-gray-500' : 'text-black'}`}>{item.name}</Text>
+      <Text style={[styles.text, { fontSize }]} className={`ml-2 ${item.completed ? 'text-gray-500' : 'text-black'}`}>{item.name}</Text>
     </View>
     <View className="flex-row items-center">
       <TouchableOpacity onPress={() => setTaskToEdit(item)}>
@@ -22,9 +28,10 @@ const TaskItem = ({ item, toggleTaskCompletion, setTaskToEdit, handleDeleteTask 
       </TouchableOpacity>
     </View>
   </View>
-);
+  );
+};
 
-const TaskList = ({ tasks, toggleTaskCompletion, setTaskToEdit, deleteTask, setTasks, renderEmptyData }) => {
+const TaskList = ({ tasks, toggleTaskCompletion, setTaskToEdit, deleteTask, setTasks, renderEmptyData}) => {
 
   const handleDeleteTask = async (taskId) => {
     const authToken = await getAuthToken();
@@ -113,5 +120,11 @@ const TaskList = ({ tasks, toggleTaskCompletion, setTaskToEdit, deleteTask, setT
     />
   );
 };
+
+const styles = StyleSheet.create({
+  text: {
+    
+  },
+});
 
 export default TaskList;

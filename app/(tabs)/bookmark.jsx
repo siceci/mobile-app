@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Text, View, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState, useContext } from 'react';
+import { Text, View, ActivityIndicator, StyleSheet } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AddTask from '../components/AddTask';
@@ -9,9 +9,11 @@ import moment from 'moment-timezone';
 import { syncTasksWithServer, deleteTaskOffline } from '../components/taskStorage';
 import { getAuthToken } from '../(auth)/auth';
 import NetInfo from '@react-native-community/netinfo';
+import FontSizeContext from '../components/FontSizeContext';
 import { clearOfflineTasks } from '../components/clearOfflineTasks'; // 引入清理离线任务的函数
 
 const Bookmark = () => {
+  const { fontSize } = useContext(FontSizeContext);
   const [items, setItems] = useState({});
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState(null);
@@ -294,8 +296,8 @@ const Bookmark = () => {
               onDayPress={handleDayPress}
               theme={{
                 calendarBackground:'#fff7ed',
-                textDayFontSize: 16,
-                textMonthFontSize: 18,
+                textDayFontSize: fontSize -2,
+                textMonthFontSize: fontSize ,
                 textDayHeaderFontSize: 14,
                 textDisabledColor: '#737373',
                 dayTextColor: 'black',
@@ -312,7 +314,13 @@ const Bookmark = () => {
           </View>
           {selectedDate && (
             <>
-              <Text className="text-lg font-semibold mt-4 ml-4 mb-1">
+            <View>
+              <Text style={[styles.text, { fontSize }]}>
+                这是书签的内容。当前字体大小为 {fontSize}。
+              </Text>
+            </View>
+              <Text style={[styles.text, { fontSize }]}
+              className="font-semibold mt-4 ml-4 mb-1">
                 Tasks for {''}
                 <Text className="text-rose-500 font-bold"> 
                 {moment(selectedDate).format('DD-MMM-YYYY')}</Text>
@@ -346,5 +354,11 @@ const Bookmark = () => {
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  text: {
+    // 你可以在这里添加其他样式
+  },
+});
 
 export default Bookmark;

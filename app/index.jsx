@@ -5,6 +5,7 @@ import { Redirect, router } from 'expo-router'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { images } from '../constants'
+import { FontSizeProvider } from './components/FontSizeContext';
 import CustomButton from './components/CustomButton'
 
 
@@ -13,6 +14,7 @@ export default function App() {
     //blackground color
     <SafeAreaView style="#7BC9C8" className="bg-teal-500 h-full"> 
     <ScrollView contentContainerStyle={{ height: '100%'}}>
+    <FontSizeProvider>
     <View className="w-full justify-center items-center h-full px-4">
 
     {/* Splash Logo */}
@@ -46,6 +48,7 @@ export default function App() {
     </View>
 
     </View>
+    </FontSizeProvider>
 
     </ScrollView>
     <StatusBar backgroundColor='#161622'
