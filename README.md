@@ -41,7 +41,7 @@ The application employs the following architecture:
 - **Navigation**: Implements navigation between different screens using `expo-router`.
 - **Task Storage Management**: Manages the logic for storing, retrieving, and syncing tasks.
 
-- ![Simulator Screenshot - iPhone 15 Pro Max - 2024-06-02 at 14 42 33](https://github.com/siceci/mobile-app/assets/134029583/79890142-cd92-429b-84e3-77b632f94625)
+- ![Simulator Screenshot - iPhone 15 Pro Max - 2024-06-02 at 14 42 33](https://github.com/siceci/mobile-app/assets/134029583/79890142-cd92-429b-84e3-77b632f94625 {width=40px)
 - ![Simulator Screenshot - iPhone 15 Pro Max - 2024-06-02 at 14 43 14](https://github.com/siceci/mobile-app/assets/134029583/9a4d8f57-3576-4404-95a7-c7a0025590e0)
 - ![Simulator Screenshot - iPhone 15 Pro Max - 2024-06-02 at 14 43 19](https://github.com/siceci/mobile-app/assets/134029583/753152c7-19bc-48cf-abf8-eb4488689ffb)
 - ![Simulator Screenshot - iPhone 15 Pro Max - 2024-06-02 at 14 43 44](https://github.com/siceci/mobile-app/assets/134029583/c19d0893-5363-4984-86e1-7513b30bd848)
