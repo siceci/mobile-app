@@ -1,5 +1,4 @@
-# Application Name
-MyTask
+# MyTask
 
 ## Purpose
 This is a mobile application serves as a simple task management system with calendar, enabling users to create, manage, and synchronize tasks across multiple devices. It offers an intuitive interface for managing daily tasks with functionalities such as adding, deleting, and updating tasks, along with offline support and synchronization capabilities.
