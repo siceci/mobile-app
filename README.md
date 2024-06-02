@@ -1,5 +1,4 @@
-# Application Name
-MyTask
+# MyTask
 
 ## Purpose
 This is a mobile application serves as a simple task management system with calendar, enabling users to create, manage, and synchronize tasks across multiple devices. It offers an intuitive interface for managing daily tasks with functionalities such as adding, deleting, and updating tasks, along with offline support and synchronization capabilities.
@@ -41,7 +40,6 @@ The application employs the following architecture:
 - **Context**: Uses React Context to manage global states like font size.
 - **Navigation**: Implements navigation between different screens using `expo-router`.
 - **Task Storage Management**: Manages the logic for storing, retrieving, and syncing tasks.
-
 
 ## Reporting Issues
 If you encounter any problems while using the website, or have any feedback, please feel free to post in the GitHub Issues section of this project.
