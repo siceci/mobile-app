@@ -5,7 +5,7 @@ import { Link, router } from 'expo-router';
 import { images } from '../../constants';
 import FormField from '../components/FormField';
 import CustomButton from '../components/CustomButton';
-import { setAuthToken } from '../(auth)/auth'; // 导入setAuthToken函数
+import { setAuthToken } from '../(auth)/auth'; 
 
 const SignIn = () => {
   const [form, setForm] = useState({
@@ -33,19 +33,16 @@ const SignIn = () => {
           // Store the auth token
           await setAuthToken(jsonResponse.token);
           console.log('Auth token stored:', jsonResponse.token); // Log the token
-          router.push('/bookmark');
+          router.push('/calendar');
         } else {
           Alert.alert('Login Failed', jsonResponse.message);
-          console.error('Login failed:', jsonResponse.message); // Log the error
         }
       } else {
         const textResponse = await response.text();
         Alert.alert('Error', 'Server response is not JSON: ' + textResponse);
-        console.error('Server response is not JSON:', textResponse); // Log the error
       }
     } catch (error) {
       Alert.alert('Network Error', 'Network request error: ' + error.message);
-      console.error('Network request error:', error.message); // Log the error
     }
     setIsSubmitting(false);
   };

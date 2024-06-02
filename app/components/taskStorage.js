@@ -1,6 +1,7 @@
 import NetInfo from "@react-native-community/netinfo";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment-timezone';
+import { Alert } from 'react-native';
 import { getAuthToken } from '../(auth)/auth';
 
 let isSyncing = false;
@@ -11,6 +12,7 @@ export const storeTasks = async (tasks) => {
     await AsyncStorage.setItem('tasks', jsonValue);
   } catch (e) {
     console.error('Error storing tasks:', e);
+    Alert.alert('Error', 'Failed to store tasks.');
   }
 };
 
@@ -20,6 +22,7 @@ export const loadTasks = async () => {
     return jsonValue != null ? JSON.parse(jsonValue) : {};
   } catch (e) {
     console.error('Error loading tasks:', e);
+    Alert.alert('Error', 'Failed to load tasks.');
     return {};
   }
 };
@@ -38,7 +41,7 @@ export const addTaskOffline = async (newTask) => {
 
   if (!taskExists) {
     newTask.pendingSync = true;
-    newTask.syncAction = 'add';  // 指定为新增操作
+    newTask.syncAction = 'add';
     currentTasks[taskDate].unshift(newTask);
     await storeTasks(currentTasks);
   }
@@ -52,7 +55,7 @@ export const deleteTaskOffline = async (taskId) => {
   for (const taskDate in currentTasks) {
     currentTasks[taskDate] = currentTasks[taskDate].map(task => {
       if (task.id === taskId) {
-        return { ...task, pendingSync: true, syncAction: 'delete' };  // 指定为删除操作
+        return { ...task, pendingSync: true, syncAction: 'delete' };
       }
       return task;
     });
@@ -61,6 +64,23 @@ export const deleteTaskOffline = async (taskId) => {
   await storeTasks(currentTasks);
   return currentTasks;
 };
+
+// export const toggleTaskCompletionOffline = async (taskId) => {
+//   const currentTasks = await loadTasks();
+
+//   for (const taskDate in currentTasks) {
+//     currentTasks[taskDate] = currentTasks[taskDate].map(task => {
+//       if (task.id === taskId) {
+//         const newStatus = task.status === 'complete' ? 'incomplete' : 'complete';
+//         return { ...task, status: newStatus, pendingSync: true, syncAction: 'update' };
+//       }
+//       return task;
+//     });
+//   }
+
+//   await storeTasks(currentTasks);
+//   return currentTasks;
+// };
 
 export const syncTasksWithServer = async () => {
   if (isSyncing) {
@@ -82,6 +102,7 @@ export const syncTasksWithServer = async () => {
   const authToken = await getAuthToken();
   if (!authToken) {
     console.error('No auth token found, cannot sync tasks');
+    Alert.alert('Error', 'User not authenticated');
     isSyncing = false;
     return;
   }
@@ -93,55 +114,90 @@ export const syncTasksWithServer = async () => {
     const taskList = updatedTasks[taskDate];
     for (const task of taskList) {
       if (task.pendingSync) {
-        if (task.syncAction === 'delete') {
-          // 同步删除操作
-          try {
-            console.log(`Deleting task: ${JSON.stringify(task)}`);
-            const response = await fetch('http://localhost:3000/users/delete-task', {
-              method: 'DELETE',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${authToken}`,
-              },
-              body: JSON.stringify({ taskId: task.id }),
-            });
+        switch (task.syncAction) {
+          case 'delete':
+            try {
+              console.log(`Deleting task: ${JSON.stringify(task)}`);
+              const response = await fetch('http://localhost:3000/users/delete-task', {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${authToken}`,
+                },
+                body: JSON.stringify({ taskId: task.id }),
+              });
 
-            if (response.ok) {
-              console.log('Task deleted:', task);
-              taskList.splice(taskList.indexOf(task), 1); // 从列表中删除任务
-              tasksUpdated = true;
-            } else {
-              const responseText = await response.text();
-              console.error('Task deletion failed:', responseText);
+              if (response.ok) {
+                console.log('Task deleted:', task);
+                taskList.splice(taskList.indexOf(task), 1);
+                tasksUpdated = true;
+              } else {
+                const responseText = await response.text();
+                // console.error('Task deletion failed:', responseText);
+                // Alert.alert('Error', `Task deletion failed: ${responseText}`);
+              }
+            } catch (error) {
+              // console.error('Task deletion failed:', error);
+              // Alert.alert('Error', `Task deletion failed: ${error.message}`);
             }
-          } catch (error) {
-            console.error('Task deletion failed:', error);
-          }
-        } else if (task.syncAction === 'add') {
-          // 同步添加操作
-          try {
-            console.log(`Adding task: ${JSON.stringify(task)}`);
-            const response = await fetch('http://localhost:3000/users/add-task', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${authToken}`,
-              },
-              body: JSON.stringify(task),
-            });
+            break;
 
-            if (response.ok) {
-              console.log('Task added:', task);
-              task.pendingSync = false; // 取消待同步标记
-              task.syncAction = ''; // 清空同步操作类型
-              tasksUpdated = true;
-            } else {
-              const responseText = await response.text();
-              console.error('Task addition failed:', responseText);
+          case 'add':
+            try {
+              console.log(`Adding task: ${JSON.stringify(task)}`);
+              const response = await fetch('http://localhost:3000/users/add-task', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${authToken}`,
+                },
+                body: JSON.stringify(task),
+              });
+
+              if (response.ok) {
+                console.log('Task added:', task);
+                Alert.alert('Task sync to server');
+                task.pendingSync = false;
+                task.syncAction = '';
+                tasksUpdated = true;
+              } else {
+                const responseText = await response.text();
+                // console.error('Task addition failed:', responseText);
+                // Alert.alert('Error', `Task addition failed: ${responseText}`);
+              }
+            } catch (error) {
+              // console.error('Task addition failed:', error);
+              // Alert.alert('Error', `Task addition failed: ${error.message}`);
             }
-          } catch (error) {
-            console.error('Task addition failed:', error);
-          }
+            break;
+
+          case 'update':
+            try {
+              console.log(`Updating task: ${JSON.stringify(task)}`);
+              const response = await fetch('http://localhost:3000/users/update-task', {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${authToken}`,
+                },
+                body: JSON.stringify({ taskId: task.id, newStatus: task.status }),
+              });
+
+              if (response.ok) {
+                console.log('Task updated:', task);
+                task.pendingSync = false;
+                task.syncAction = '';
+                tasksUpdated = true;
+              } else {
+                const responseText = await response.text();
+                console.error('Task update failed:', responseText);
+                Alert.alert('Error', `Task update failed: ${responseText}`);
+              }
+            } catch (error) {
+              console.error('Task update failed:', error);
+              Alert.alert('Error', `Task update failed: ${error.message}`);
+            }
+            break;
         }
       }
     }

@@ -7,7 +7,7 @@ import React, {useContext} from 'react';
 //react funcitonal componement 
 const TabIcon = ({icon, color, name, focused}) => {
     const { fontSize, setFontSize } = useContext(FontSizeContext);
-    const parsedFontSize = parseFloat(fontSize); // 将 fontSize 转换为数字
+    const parsedFontSize = parseFloat(fontSize); 
     const newFontSize = parsedFontSize - 3; 
     return (
         <View className="items-center justify-center">
@@ -33,37 +33,19 @@ const TabsLayout = () => {
         <Tabs
         screenOptions={{
             tabBarShowLabel:false,
-            //the color icon that when u stay in the that tab
             tabBarActiveTintColor : '#fff7ed',
             tabBarInactiveTintColor : '#1e3932', //inactive
             tabBarStyle: {
                 backgroundColor: '#14b8a6', //Green
-                // borderTopWidth: 1,
-                // borderTopColor: '#1e3932', //Dark Green
+
                 height: 95,
             }
         }}>
 
-        {/* Bookmark section */}
-        <Tabs.Screen 
-        name="bookmark"
-        options={{
-            title: 'Calendar',
-            headerShown: false,
-            tabBarIcon: ({color, focused}) => (
-                <TabIcon
-                    icon={icons.calendar}
-                    color={color}
-                    name="Calendar"
-                    focused={focused}
-                />
-            )
-        }}
-        />
 
-        {/* Create section */}
+        {/* About section */}
         <Tabs.Screen 
-        name="create"
+        name="about"
         options={{
             title: 'About',
             headerShown: false,
@@ -78,9 +60,26 @@ const TabsLayout = () => {
         }}
         />
 
+                {/* Calendar section */}
+                <Tabs.Screen 
+        name="calendar"
+        options={{
+            title: 'Calendar',
+            headerShown: false,
+            tabBarIcon: ({color, focused}) => (
+                <TabIcon
+                    icon={icons.calendar}
+                    color={color}
+                    name="Calendar"
+                    focused={focused}
+                />
+            )
+        }}
+        />
+
         {/* Setting section */}
         <Tabs.Screen 
-        name="profile"
+        name="setting"
         options={{
             title: 'Setting',
             headerShown: false,

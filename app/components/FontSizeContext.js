@@ -1,11 +1,11 @@
-// FontSizeContext.js
 import React, { createContext, useState, useEffect } from 'react';
+import { Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const FontSizeContext = createContext();
 
 export const FontSizeProvider = ({ children }) => {
-  const [fontSize, setFontSize] = useState(18); // 默认字体大小
+  const [fontSize, setFontSize] = useState(18); 
 
   useEffect(() => {
     const loadFontSize = async () => {
@@ -16,7 +16,7 @@ export const FontSizeProvider = ({ children }) => {
           console.log(`Loaded font size: ${savedFontSize}`);
         }
       } catch (error) {
-        console.error('Failed to load font size.', error);
+        Alert.alert('Error', 'Failed to load font size.');
       }
     };
 
@@ -29,7 +29,7 @@ export const FontSizeProvider = ({ children }) => {
       setFontSize(size);
       console.log(`Saved font size: ${size}`);
     } catch (error) {
-      console.error('Failed to save font size.', error);
+      Alert.alert('Error', 'Failed to save font size.');
     }
   };
 

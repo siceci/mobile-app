@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Alert } from 'react-native';
 
 export const getAuthToken = async () => {
   try {
@@ -6,7 +7,7 @@ export const getAuthToken = async () => {
     console.log('Retrieved token:', token);
     return token;
   } catch (e) {
-    console.error('Error fetching auth token:', e);
+    Alert.alert('Error', 'Error fetching auth token: ' + e);
     return null;
   }
 };
@@ -16,7 +17,7 @@ export const setAuthToken = async (token) => {
     await AsyncStorage.setItem('authToken', token);
     console.log('Stored token:', token);
   } catch (e) {
-    console.error('Error storing auth token:', e);
+    Alert.alert('Error', 'Error storing auth token: ' + e);
   }
 };
 
@@ -25,6 +26,6 @@ export const logout = async () => {
     await AsyncStorage.removeItem('authToken');
     console.log('Token removed');
   } catch (e) {
-    console.error('Error removing auth token:', e);
+    Alert.alert('Error', 'Error removing auth token: ' + e);
   }
 };

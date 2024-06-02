@@ -1,23 +1,21 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Text, View, ActivityIndicator, StyleSheet } from 'react-native';
+import { Text, View, ActivityIndicator, StyleSheet, Alert } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AddTask from '../components/AddTask';
-import EditTask from '../components/EditTask';
 import TaskList from '../components/TaskList';
 import moment from 'moment-timezone';
 import { syncTasksWithServer, deleteTaskOffline } from '../components/taskStorage';
 import { getAuthToken } from '../(auth)/auth';
 import NetInfo from '@react-native-community/netinfo';
 import FontSizeContext from '../components/FontSizeContext';
-import { clearOfflineTasks } from '../components/clearOfflineTasks'; // 引入清理离线任务的函数
+import { clearOfflineTasks } from '../components/clearOfflineTasks'; 
 
-const Bookmark = () => {
+const CalendarTask = () => {
   const { fontSize } = useContext(FontSizeContext);
   const [items, setItems] = useState({});
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState(null);
-  const [taskToEdit, setTaskToEdit] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
   const [tasksForSelectedDate, setTasksForSelectedDate] = useState([]);
   const today = moment().tz('Australia/Sydney').format('YYYY-MM-DD');
@@ -25,37 +23,35 @@ const Bookmark = () => {
   useEffect(() => {
     fetchUserId();
 
-    // 添加 NetInfo 监听器
     const unsubscribe = NetInfo.addEventListener(state => {
       if (state.isConnected) {
         clearOfflineTasks().then(() => {
-          syncTasksWithServer(); // 尝试同步任务
+          syncTasksWithServer(); 
         });
       }
     });
 
-    return () => unsubscribe(); // 组件卸载时取消监听器
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
     if (userId) {
       fetchTasks();
+
+      const interval = setInterval(() => {
+        syncTasksWithServer().then(fetchTasks);
+      }, 60000); 
+
+      return () => clearInterval(interval);
     }
   }, [userId]);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      syncTasksWithServer().then(fetchTasks);
-    }, 60000); // 每分钟检查一次同步任务
-    return () => clearInterval(interval);
-  }, []);
-
   const fetchUserId = async () => {
     try {
-      const authToken = await getAuthToken(); // 获取身份验证令牌
+      const authToken = await getAuthToken();
   
       if (!authToken) {
-        console.error('没有找到身份验证令牌，无法获取用户ID');
+        Alert.alert('Error', 'No authentication token found, unable to fetch user ID');
         return;
       }
   
@@ -63,7 +59,7 @@ const Bookmark = () => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authToken}`, // 添加身份验证头
+          'Authorization': `Bearer ${authToken}`,
         },
       });
   
@@ -71,20 +67,20 @@ const Bookmark = () => {
         const jsonResponse = await response.json();
         setUserId(jsonResponse.user.id);
       } else {
-        console.error('Failed to fetch user ID:', response.statusText);
+        // Alert.alert('Error', `Failed to fetch user ID: ${response.statusText}`);
       }
     } catch (error) {
-      console.error('Error fetching user ID:', error);
+      // Alert.alert('Error', `Error fetching user ID: ${error.message}`);
     }
   };
   
   const fetchTasks = async () => {
     setLoading(true);
     try {
-      const authToken = await getAuthToken(); // 获取身份验证令牌
+      const authToken = await getAuthToken();
   
       if (!authToken) {
-        console.error('没有找到身份验证令牌，无法获取任务');
+        Alert.alert('Error', 'No authentication token found, unable to fetch tasks');
         setLoading(false);
         return;
       }
@@ -93,7 +89,7 @@ const Bookmark = () => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authToken}`, // 添加身份验证头
+          'Authorization': `Bearer ${authToken}`,
         },
       });
   
@@ -110,7 +106,6 @@ const Bookmark = () => {
             }
             formattedItems[date].push({ ...task, id: task.id, name: `${task.description}`, completed: task.completed });
           });
-          // Sort tasks: incomplete first, completed last
           Object.keys(formattedItems).forEach(date => {
             formattedItems[date].sort((a, b) => a.completed - b.completed);
           });
@@ -121,10 +116,10 @@ const Bookmark = () => {
         } 
       } else {
         const textResponse = await response.text();
-        console.error('Server response not JSON:', textResponse);
+        Alert.alert('Error', `Server response not JSON: ${textResponse}`);
       }
     } catch (error) {
-      console.error('Error fetching tasks:', error);
+      // Alert.alert('Error', `Error fetching tasks: ${error.message}`);
     }
     setLoading(false);
   };
@@ -152,12 +147,12 @@ const Bookmark = () => {
       const authToken = await getAuthToken();
 
       if (!authToken) {
-        console.error('没有找到身份验证令牌，无法更新任务');
+        Alert.alert('Error', 'No authentication token found, unable to update task');
         return;
       }
 
       const response = await fetch('http://localhost:3000/users/update-task', {
-        method: 'POST',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${authToken}`,
@@ -174,23 +169,23 @@ const Bookmark = () => {
         if (response.ok) {
           console.log('Task updated successfully:', jsonResponse);
         } else {
-          console.error('Failed to update task:', jsonResponse.message);
+          Alert.alert('Error', `Failed to update task: ${jsonResponse.message}`);
           rollbackTaskState(id, !newState);
         }
       } else {
         const textResponse = await response.text();
-        console.error('Server response not JSON:', textResponse);
+        Alert.alert('Error', `Server response not JSON: ${textResponse}`);
         rollbackTaskState(id, !newState);
       }
     } catch (error) {
-      console.error('Network error:', error);
+      Alert.alert('Error', `Network error: ${error.message}`);
       rollbackTaskState(id, !newState);
     }
   };
 
   const deleteTask = async id => {
     try {
-      await deleteTaskOffline(id); // 标记任务为待同步删除
+      await deleteTaskOffline(id);
       setItems(prevItems => {
         const newItems = { ...prevItems };
         Object.keys(newItems).forEach(date => {
@@ -204,9 +199,9 @@ const Bookmark = () => {
         }
         return newItems;
       });
-      await syncTasksWithServer(); // 立即尝试同步任务
+      await syncTasksWithServer();
     } catch (error) {
-      console.error('Error deleting task:', error);
+      Alert.alert('Error', `Error deleting task: ${error.message}`);
     }
   };
 
@@ -223,28 +218,6 @@ const Bookmark = () => {
     setItems(rolledBackItems);
     setTasksForSelectedDate(rolledBackItems[selectedDate] || []);
   };
-
-  const updateTask = updatedTask => {
-    const date = moment(updatedTask.date).tz('Australia/Sydney').format('YYYY-MM-DD');
-    const newItems = { ...items };
-    if (!newItems[date]) {
-      newItems[date] = [];
-    }
-    newItems[date] = newItems[date].map(item => (item.id === updatedTask.id ? { ...updatedTask, id: updatedTask.id, name: updatedTask.description, completed: updatedTask.completed } : item));
-    setItems(newItems);
-
-    if (selectedDate === date) {
-      setTasksForSelectedDate(newItems[date] || []);
-    }
-
-    setTaskToEdit(null);
-  };
-
-  const renderEmptyData = () => (
-    <View className="mt-5 items-center">
-      <Text className="text-lg text-gray-500">No tasks for selected date.</Text>
-    </View>
-  );
 
   const addNewTask = newTask => {
     const date = moment(newTask.date).tz('Australia/Sydney').format('YYYY-MM-DD');
@@ -284,6 +257,13 @@ const Bookmark = () => {
     return marked;
   };
 
+  const renderEmptyData = () => (
+    <View className="mt-5 items-center">
+      <Text style={[styles.text, { fontSize }]}
+      className="text-gray-500">No tasks for selected date.</Text>
+    </View>
+  );
+
   return (
     <SafeAreaView className="bg-orange-50 h-full">
       {loading ? (
@@ -296,8 +276,8 @@ const Bookmark = () => {
               onDayPress={handleDayPress}
               theme={{
                 calendarBackground:'#fff7ed',
-                textDayFontSize: fontSize -2,
-                textMonthFontSize: fontSize ,
+                textDayFontSize: 17,
+                textMonthFontSize: 18 ,
                 textDayHeaderFontSize: 14,
                 textDisabledColor: '#737373',
                 dayTextColor: 'black',
@@ -314,11 +294,7 @@ const Bookmark = () => {
           </View>
           {selectedDate && (
             <>
-            <View>
-              <Text style={[styles.text, { fontSize }]}>
-                这是书签的内容。当前字体大小为 {fontSize}。
-              </Text>
-            </View>
+
               <Text style={[styles.text, { fontSize }]}
               className="font-semibold mt-4 ml-4 mb-1">
                 Tasks for {''}
@@ -329,9 +305,8 @@ const Bookmark = () => {
                 <TaskList
                   tasks={tasksForSelectedDate}
                   toggleTaskCompletion={toggleTaskCompletion}
-                  setTaskToEdit={setTaskToEdit}
                   deleteTask={deleteTask}
-                  setTasks={setItems} // 傳遞 setTasks 函數
+                  setTasks={setItems}
                   renderEmptyData={renderEmptyData}
                 />
               ) : (
@@ -344,21 +319,12 @@ const Bookmark = () => {
       <View className="absolute right-5 bottom-5">
         {userId && <AddTask userId={userId} onAddTask={addNewTask} />}
       </View>
-      {taskToEdit && (
-        <EditTask
-          task={taskToEdit}
-          onUpdateTask={updateTask}
-          onCancel={() => setTaskToEdit(null)}
-        />
-      )}
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  text: {
-    // 你可以在这里添加其他样式
-  },
+  text: {},
 });
 
-export default Bookmark;
+export default CalendarTask;

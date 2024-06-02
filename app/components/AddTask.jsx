@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { View, TextInput, Text, TouchableOpacity, Modal, Alert } from 'react-native';
+import React, { useState, useEffect, useContext } from 'react';
+import { StyleSheet, View, TextInput, Text, TouchableOpacity, Modal, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment-timezone';
 import NetInfo from "@react-native-community/netinfo";
 import { addTaskOffline, syncTasksWithServer } from './taskStorage';
-import { getAuthToken } from '../(auth)/auth'; // Ensure this is correctly imported
+import FontSizeContext from '../components/FontSizeContext';
+import { getAuthToken } from '../(auth)/auth'; 
 
 const AddTask = ({ userId, onAddTask }) => {
+  const { fontSize } = useContext(FontSizeContext);
   const [description, setDescription] = useState('');
   const [date, setDate] = useState(new Date());
   const [modalVisible, setModalVisible] = useState(false);
@@ -46,7 +48,8 @@ const AddTask = ({ userId, onAddTask }) => {
           console.log('Task added:', jsonResponse.task);
           onAddTask(jsonResponse.task);
         } else {
-          console.error('Task addition failed:', await response.text());
+          // const errorMessage = await response.text();
+          // Alert.alert('Task addition failed', errorMessage);
           await addTaskOffline(newTask);
           onAddTask(newTask);
         }
@@ -56,7 +59,8 @@ const AddTask = ({ userId, onAddTask }) => {
         onAddTask(newTask);
       }
     } catch (error) {
-      console.error('Network error:', error);
+      // console.error('Network error:', error);
+      Alert.alert('Network Error', "\n" + error.message + "\n\nTask saved locally");
       await addTaskOffline(newTask);
       console.log('Due to network error, task saved offline:', newTask);
       onAddTask(newTask);
@@ -101,14 +105,17 @@ const AddTask = ({ userId, onAddTask }) => {
       >
         <View className="flex-1 justify-center items-center bg-opacity-50">
           <View className="w-4/5 bg-teal-500 p-5 rounded-2xl border-teal-950 border shadow-md">
-            <Text className="font-semibold text-lg mb-1 text-white">Add Task:</Text>
+            <Text style={[styles.text, { fontSize }]}
+            className="font-semibold mb-1 text-white">Add Task:</Text>
             <TextInput
               placeholder="Enter task description"
               value={description}
               onChangeText={setDescription}
-              className="bg-orange-200 text-black h-10 border rounded-xl border-orange-200 mb-5 px-3 text-base"
+              style={[styles.text, { fontSize }]}
+              className="bg-orange-200 text-black h-10 border rounded-xl border-orange-200 mb-5 px-3"
             />
-            <Text className="font-semibold text-lg mb-1 text-white">Select Date:</Text>
+            <Text style={[styles.text, { fontSize }]}
+            className="font-semibold text-lg mb-1 text-white">Select Date:</Text>
             <View className="items-center mb-6 rounded-xl">
               <DateTimePicker
                 value={date}
@@ -125,13 +132,13 @@ const AddTask = ({ userId, onAddTask }) => {
                 className="bg-red-400 rounded-xl px-3 py-2"
                 onPress={() => setModalVisible(false)}
               >
-                <Text className="text-white text-base font-bold text-center">Cancel</Text>
+                <Text style={[styles.text, { fontSize }]} className="text-white font-bold text-center">Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity 
                 className="bg-blue-500 rounded-xl px-3 py-2"
                 onPress={handleAddTask}
               >
-                <Text className="text-white text-base font-bold text-center">Add Task</Text>
+                <Text style={[styles.text, { fontSize }]} className="text-white font-bold text-center">Add Task</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -140,5 +147,10 @@ const AddTask = ({ userId, onAddTask }) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  text: {},
+});
+
 
 export default AddTask;

@@ -32,11 +32,6 @@ export default function App() {
     <Text className="text-orange-200 font-extrabold"> MyTask</Text>
     </Text>
 
-    {/* Subtitle */}
-    {/* <Text className="text-white text-center mt-6 text-xl mb-6">
-    Where creativity meets innvation: embark on a journey of limitless exploration with Aora
-    </Text> */}
-
 
     <CustomButton
     title="Continue with Email"

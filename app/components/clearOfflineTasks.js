@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import moment from 'moment-timezone';
 
 export const clearOfflineTasks = async () => {
   try {
@@ -19,6 +18,6 @@ export const clearOfflineTasks = async () => {
       console.log('Offline tasks cleared successfully');
     }
   } catch (e) {
-    console.error('Error clearing offline tasks:', e);
+    console.log('Error clearing offline tasks:', e);
   }
 };

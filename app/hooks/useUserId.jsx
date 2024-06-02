@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Alert } from 'react-native';
 
 const useUserId = () => {
   const [userId, setUserId] = useState(null);
@@ -18,9 +19,11 @@ const useUserId = () => {
           setUserId(jsonResponse.user.id);
         } else {
           console.error('Failed to fetch user ID:', response.statusText);
+          Alert.alert('Error', `Failed to fetch user ID: ${response.statusText}`);
         }
       } catch (error) {
         console.error('Error fetching user ID:', error);
+        Alert.alert('Error', `Error fetching user ID: ${error.message}`);
       }
     };
 

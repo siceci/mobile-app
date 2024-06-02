@@ -6,33 +6,27 @@ import { getAuthToken } from '../(auth)/auth';
 import { deleteTaskOffline, syncTasksWithServer } from './taskStorage';
 import FontSizeContext from '../components/FontSizeContext';
 
-
-const TaskItem = ({ item, toggleTaskCompletion, setTaskToEdit, handleDeleteTask }) => {
+const TaskItem = ({ item, toggleTaskCompletion, handleDeleteTask }) => {
   const { fontSize } = useContext(FontSizeContext);
 
   return (
-
-  <View className={`flex-row p-3 items-center justify-between ml-4 mr-4 ${item.completed ? 'bg-green-100' : 'bg-red-100'}`}>
-    <View className="flex-row items-center">
-      <TouchableOpacity onPress={() => toggleTaskCompletion(item.id)}>
-        <Icon name={item.completed ? 'check-square-o' : 'square-o'} size={25} color={item.completed ? 'gray' : 'green'} />
-      </TouchableOpacity>
-      <Text style={[styles.text, { fontSize }]} className={`ml-2 ${item.completed ? 'text-gray-500' : 'text-black'}`}>{item.name}</Text>
+    <View className={`flex-row p-3 items-center justify-between ml-4 mr-4 ${item.completed ? 'bg-green-100' : 'bg-red-100'}`}>
+      <View className="flex-row items-center">
+        <TouchableOpacity onPress={() => toggleTaskCompletion(item.id)}>
+          <Icon name={item.completed ? 'check-square-o' : 'square-o'} size={25} color={item.completed ? 'gray' : 'green'} />
+        </TouchableOpacity>
+        <Text style={[styles.text, { fontSize }]} className={`ml-2 ${item.completed ? 'text-gray-500' : 'text-black'}`}>{item.name}</Text>
+      </View>
+      <View className="flex-row items-center">
+        <TouchableOpacity onPress={() => handleDeleteTask(item.id)}>
+          <Icon name="trash" size={25} color={item.completed ? 'gray' : '#f43f5e'} style={{ marginLeft: 15 }} />
+        </TouchableOpacity>
+      </View>
     </View>
-    <View className="flex-row items-center">
-      <TouchableOpacity onPress={() => setTaskToEdit(item)}>
-        <Icon name="edit" size={25} color={item.completed ? 'gray' : '#3b82f6'} style={{ marginLeft: 10, marginBottom: -4 }} />
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => handleDeleteTask(item.id)}>
-        <Icon name="trash" size={25} color={item.completed ? 'gray' : '#f43f5e'} style={{ marginLeft: 15 }} />
-      </TouchableOpacity>
-    </View>
-  </View>
   );
 };
 
-const TaskList = ({ tasks, toggleTaskCompletion, setTaskToEdit, deleteTask, setTasks, renderEmptyData}) => {
-
+const TaskList = ({ tasks, toggleTaskCompletion, deleteTask, setTasks, renderEmptyData }) => {
   const handleDeleteTask = async (taskId) => {
     const authToken = await getAuthToken();
     if (!authToken) {
@@ -54,19 +48,19 @@ const TaskList = ({ tasks, toggleTaskCompletion, setTaskToEdit, deleteTask, setT
         });
 
         if (response.ok) {
-          deleteTask(taskId); // 刪除本地任務
+          deleteTask(taskId);
         } else {
           const errorData = await response.json();
           Alert.alert('Error', errorData.message);
-          await deleteTaskOffline(taskId); // 标记为待同步删除
+          await deleteTaskOffline(taskId);
         }
       } else {
-        await deleteTaskOffline(taskId); // 标记为待同步删除
+        await deleteTaskOffline(taskId);
         console.log('Task deleted offline:', taskId);
       }
     } catch (error) {
-      console.error('Network error:', error);
-      await deleteTaskOffline(taskId); // 标记为待同步删除
+      Alert.alert('Network Error', error.message);
+      await deleteTaskOffline(taskId);
       console.log('Due to network error, task deleted offline:', taskId);
     }
 
@@ -81,7 +75,7 @@ const TaskList = ({ tasks, toggleTaskCompletion, setTaskToEdit, deleteTask, setT
       return newTasks;
     });
 
-    await syncTasksWithServer(); // 立即尝试同步任务
+    await syncTasksWithServer();
   };
 
   useEffect(() => {
@@ -112,8 +106,7 @@ const TaskList = ({ tasks, toggleTaskCompletion, setTaskToEdit, deleteTask, setT
         <TaskItem
           item={item}
           toggleTaskCompletion={toggleTaskCompletion}
-          setTaskToEdit={setTaskToEdit}
-          handleDeleteTask={handleDeleteTask} // 確保傳遞正確的函數
+          handleDeleteTask={handleDeleteTask}
         />
       )}
       ListEmptyComponent={renderEmptyData}
@@ -122,9 +115,7 @@ const TaskList = ({ tasks, toggleTaskCompletion, setTaskToEdit, deleteTask, setT
 };
 
 const styles = StyleSheet.create({
-  text: {
-    
-  },
+  text: {},
 });
 
 export default TaskList;
