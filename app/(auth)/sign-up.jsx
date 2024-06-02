@@ -4,6 +4,8 @@ import { Link, router } from 'expo-router';
 import { images } from '../../constants';
 import FormField from '../components/FormField';
 import CustomButton from '../components/CustomButton';
+import { REACT_APP_API_BASE_URL } from '@env';
+
 
 const SignUp = () => {
   const [form, setForm] = useState({
