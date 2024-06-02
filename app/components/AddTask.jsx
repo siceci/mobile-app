@@ -7,6 +7,7 @@ import NetInfo from "@react-native-community/netinfo";
 import { addTaskOffline, syncTasksWithServer } from './taskStorage';
 import FontSizeContext from '../components/FontSizeContext';
 import { getAuthToken } from '../(auth)/auth'; 
+import {REACT_APP_API_BASE_URL} from '@env';
 
 const AddTask = ({ userId, onAddTask }) => {
   const { fontSize } = useContext(FontSizeContext);
@@ -29,12 +30,12 @@ const AddTask = ({ userId, onAddTask }) => {
       const authToken = await getAuthToken(); // Retrieve the auth token
 
       if (!authToken) {
-        Alert.alert('Authentication Error', 'User not authenticated');
+        // Alert.alert('Authentication Error', 'User not authenticated');
         return;
       }
 
       if (state.isConnected) {
-        const response = await fetch('http://localhost:3000/users/add-task', {
+        const response = await fetch(`${REACT_APP_API_BASE_URL}/users/add-task`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

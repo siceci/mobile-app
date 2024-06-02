@@ -5,6 +5,7 @@ import NetInfo from "@react-native-community/netinfo";
 import { getAuthToken } from '../(auth)/auth';
 import { deleteTaskOffline, syncTasksWithServer } from './taskStorage';
 import FontSizeContext from '../components/FontSizeContext';
+import {REACT_APP_API_BASE_URL} from '@env';
 
 const TaskItem = ({ item, toggleTaskCompletion, handleDeleteTask }) => {
   const { fontSize } = useContext(FontSizeContext);
@@ -30,7 +31,7 @@ const TaskList = ({ tasks, toggleTaskCompletion, deleteTask, setTasks, renderEmp
   const handleDeleteTask = async (taskId) => {
     const authToken = await getAuthToken();
     if (!authToken) {
-      Alert.alert('Authentication Error', 'User not authenticated');
+      // Alert.alert('Authentication Error', 'User not authenticated');
       return;
     }
 
@@ -38,7 +39,7 @@ const TaskList = ({ tasks, toggleTaskCompletion, deleteTask, setTasks, renderEmp
       const state = await NetInfo.fetch();
 
       if (state.isConnected) {
-        const response = await fetch(`http://localhost:3000/users/delete-task`, {
+        const response = await fetch(`${REACT_APP_API_BASE_URL}/users/delete-task`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',

@@ -6,6 +6,7 @@ import { logout, getAuthToken } from '../(auth)/auth';
 import { router } from 'expo-router';
 import { images } from '../../constants';
 import CustomButton from '../components/CustomButton';
+import {REACT_APP_API_BASE_URL} from '@env';
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -15,7 +16,7 @@ const Profile = () => {
     const fetchUserProfile = async () => {
       try {
         const token = await getAuthToken();
-        const response = await fetch('http://localhost:3000/users/profile', { 
+        const response = await fetch(`${REACT_APP_API_BASE_URL}/users/profile`, { 
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,

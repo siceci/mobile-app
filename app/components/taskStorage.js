@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment-timezone';
 import { Alert } from 'react-native';
 import { getAuthToken } from '../(auth)/auth';
+import {REACT_APP_API_BASE_URL} from '@env';
 
 let isSyncing = false;
 
@@ -102,7 +103,7 @@ export const syncTasksWithServer = async () => {
   const authToken = await getAuthToken();
   if (!authToken) {
     console.error('No auth token found, cannot sync tasks');
-    Alert.alert('Error', 'User not authenticated');
+    // Alert.alert('Error', 'User not authenticated');
     isSyncing = false;
     return;
   }
@@ -118,7 +119,7 @@ export const syncTasksWithServer = async () => {
           case 'delete':
             try {
               console.log(`Deleting task: ${JSON.stringify(task)}`);
-              const response = await fetch('http://localhost:3000/users/delete-task', {
+              const response = await fetch(`${REACT_APP_API_BASE_URL}/users/delete-task`, {
                 method: 'DELETE',
                 headers: {
                   'Content-Type': 'application/json',
@@ -145,7 +146,7 @@ export const syncTasksWithServer = async () => {
           case 'add':
             try {
               console.log(`Adding task: ${JSON.stringify(task)}`);
-              const response = await fetch('http://localhost:3000/users/add-task', {
+              const response = await fetch(`${REACT_APP_API_BASE_URL}/users/add-task`, {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -174,7 +175,7 @@ export const syncTasksWithServer = async () => {
           case 'update':
             try {
               console.log(`Updating task: ${JSON.stringify(task)}`);
-              const response = await fetch('http://localhost:3000/users/update-task', {
+              const response = await fetch(`${REACT_APP_API_BASE_URL}/users/update-task`, {
                 method: 'PUT',
                 headers: {
                   'Content-Type': 'application/json',

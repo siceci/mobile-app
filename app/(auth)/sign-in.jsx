@@ -6,6 +6,7 @@ import { images } from '../../constants';
 import FormField from '../components/FormField';
 import CustomButton from '../components/CustomButton';
 import { setAuthToken } from '../(auth)/auth'; 
+import { REACT_APP_API_BASE_URL } from '@env';
 
 const SignIn = () => {
   const [form, setForm] = useState({
@@ -18,7 +19,7 @@ const SignIn = () => {
   const submit = async () => {
     setIsSubmitting(true);
     try {
-      const response = await fetch('http://localhost:3000/users/login', {
+      const response = await fetch(`${REACT_APP_API_BASE_URL}/users/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

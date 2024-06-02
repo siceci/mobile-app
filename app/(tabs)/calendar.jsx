@@ -10,6 +10,7 @@ import { getAuthToken } from '../(auth)/auth';
 import NetInfo from '@react-native-community/netinfo';
 import FontSizeContext from '../components/FontSizeContext';
 import { clearOfflineTasks } from '../components/clearOfflineTasks'; 
+import {REACT_APP_API_BASE_URL} from '@env';
 
 const CalendarTask = () => {
   const { fontSize } = useContext(FontSizeContext);
@@ -51,11 +52,11 @@ const CalendarTask = () => {
       const authToken = await getAuthToken();
   
       if (!authToken) {
-        Alert.alert('Error', 'No authentication token found, unable to fetch user ID');
+        // Alert.alert('Error', 'No authentication token found, unable to fetch user ID');
         return;
       }
   
-      const response = await fetch('http://localhost:3000/users/get-current-user', {
+      const response = await fetch(`${REACT_APP_API_BASE_URL}/users/get-current-user`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -80,12 +81,12 @@ const CalendarTask = () => {
       const authToken = await getAuthToken();
   
       if (!authToken) {
-        Alert.alert('Error', 'No authentication token found, unable to fetch tasks');
+        // Alert.alert('Error', 'No authentication token found, unable to fetch tasks');
         setLoading(false);
         return;
       }
   
-      const response = await fetch('http://localhost:3000/users/dashboard', {
+      const response = await fetch(`${REACT_APP_API_BASE_URL}/users/dashboard`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

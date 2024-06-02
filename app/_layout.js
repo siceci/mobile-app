@@ -4,6 +4,7 @@ import React, { useEffect } from 'react'
 import {useFonts} from 'expo-font'
 import { FontSizeProvider } from './components/FontSizeContext';
 
+
 SplashScreen.preventAutoHideAsync();
 
 const RootLayout = () => {
